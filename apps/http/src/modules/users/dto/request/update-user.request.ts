@@ -1,5 +1,12 @@
-import { OmitType, PartialType } from '@nestjs/swagger';
-import { CreateUserRequest } from './create-user.request';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+
+import {
+  IsDateString,
+  IsEmail,
+  IsOptional,
+  IsPhoneNumber,
+  IsString,
+} from 'class-validator';
 
 export interface IUpdateUserRequest {
   avatar?: string;
@@ -11,6 +18,45 @@ export interface IUpdateUserRequest {
   phone?: string;
 }
 
-export class UpdateUserRequest
-  extends PartialType(OmitType(CreateUserRequest, ['avatar']))
-  implements IUpdateUserRequest {}
+export class UpdateUserRequest implements IUpdateUserRequest {
+  @ApiPropertyOptional({ description: 'Имя пользователя.', type: String })
+  @IsString()
+  @IsOptional()
+  firstName?: string;
+
+  @ApiPropertyOptional({ description: 'Фамилия пользователя.', type: String })
+  @IsString()
+  @IsOptional()
+  lastName?: string;
+
+  @ApiPropertyOptional({
+    description: 'Дата рождения пользователя.',
+    type: Date,
+    format: 'date',
+  })
+  @IsDateString({ strict: true, strictSeparator: true })
+  @IsOptional()
+  birthday?: Date;
+
+  @ApiPropertyOptional({
+    description: 'Информация о пользователе.',
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  about?: string;
+
+  @ApiPropertyOptional({
+    description: 'Email пользователя.',
+    type: String,
+    format: 'email',
+  })
+  @IsEmail()
+  @IsOptional()
+  email?: string;
+
+  @ApiPropertyOptional({ description: 'Телефон пользователя.', type: String })
+  @IsPhoneNumber('RU')
+  @IsOptional()
+  phone?: string;
+}

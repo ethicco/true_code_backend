@@ -21,6 +21,12 @@ class EnvironmentVariables {
 
   @IsString()
   DB_PASSWORD: string;
+
+  @IsString()
+  JWT_AUTH_SECRET: string;
+
+  @IsString()
+  JWT_AUTH_REFRESH_SECRET: string;
 }
 
 export function validate(

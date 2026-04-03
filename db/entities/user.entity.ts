@@ -33,6 +33,9 @@ export class UserEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 32 })
   phone: string;
 
+  @Column({ name: 'password_hash', type: 'varchar', length: 32 })
+  passwordHash: string;
+
   @OneToMany(() => PostEntity, (posts) => posts.user)
   posts: Array<PostEntity>;
 }

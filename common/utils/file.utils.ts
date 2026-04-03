@@ -2,15 +2,26 @@ import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer
 import { diskStorage } from 'multer';
 import * as fs from 'node:fs/promises';
 import path from 'node:path';
+import { settings } from '../settings';
 
-export const storage = (isUpdate = false) =>
+interface StorageConfig {
+  isUpdate?: boolean;
+  path: string;
+}
+
+export const storage = (config: StorageConfig) =>
   diskStorage({
     async destination(req, file, cb) {
-      const avatarsDir = isUpdate
-        ? path.join(process.cwd(), 'public', 'avatars', req.params.id as string)
-        : path.join(process.cwd(), 'public', 'avatars');
+      const avatarsDir = config.isUpdate
+        ? path.join(
+            process.cwd(),
+            settings.UPLOAD_FOLDER,
+            config.path || '',
+            req.params.id as string,
+          )
+        : path.join(process.cwd(), settings.UPLOAD_FOLDER, config.path || '');
 
-      if (isUpdate) {
+      if (config.isUpdate) {
         const files = await fs.readdir(avatarsDir);
 
         await Promise.all(

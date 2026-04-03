@@ -37,7 +37,7 @@ async function bootstrap(): Promise<void> {
   const port = config.get<number>('HTTP_API_PORT') || 3000;
 
   app.useStaticAssets(path.join(process.cwd(), 'public'), {
-    prefix: '/public',
+    prefix: '/uploads',
   });
 
   app.enableVersioning({

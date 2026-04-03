@@ -4,19 +4,21 @@ import {
   IsEmail,
   IsPhoneNumber,
   IsString,
+  Length,
 } from 'class-validator';
 
-export interface ICreateUserRequest {
+export interface ISignUpRequest {
   avatar: string;
   firstName: string;
   lastName: string;
+  password: string;
   birthday: Date;
   about: string;
   email: string;
   phone: string;
 }
 
-export class CreateUserRequest implements ICreateUserRequest {
+export class SignUpRequest implements ISignUpRequest {
   @ApiProperty({
     description: 'Аватар пользователя',
     type: String,
@@ -31,6 +33,10 @@ export class CreateUserRequest implements ICreateUserRequest {
   @ApiProperty({ description: 'Фамилия пользователя.', type: String })
   @IsString()
   lastName: string;
+
+  @ApiProperty({ description: 'Пароль пользователя.', type: String })
+  @Length(8, 32)
+  password: string;
 
   @ApiProperty({
     description: 'Дата рождения пользователя.',

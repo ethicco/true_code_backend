@@ -16,6 +16,7 @@ export default {
       'ts-jest',
       {
         isolatedModules: true,
+        tsconfig: 'tsconfig.json',
       },
     ],
   },
@@ -25,4 +26,6 @@ export default {
   },
   modulePathIgnorePatterns: ['dist', 'node_modules'],
   coveragePathIgnorePatterns: ['dist', 'node_modules'],
+  collectCoverageFrom: ['**/*.(t|j)s'],
+  coverageDirectory: '../coverage',
 } satisfies JestConfigWithTsJest;

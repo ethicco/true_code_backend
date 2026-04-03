@@ -2,7 +2,7 @@ import { UserEntity } from '@/db/entities';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ICreateUserRequest, IUpdateUserRequest } from './dto';
+import { IUpdateUserRequest } from './dto';
 
 @Injectable()
 export class UsersRepository {
@@ -10,10 +10,6 @@ export class UsersRepository {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
   ) {}
-
-  create(request: ICreateUserRequest): Promise<UserEntity> {
-    return this.userRepository.save(request);
-  }
 
   getByEmail(email: string): Promise<UserEntity> {
     return this.userRepository.findOneOrFail({ where: { email } });

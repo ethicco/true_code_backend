@@ -5,7 +5,6 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
-  Post,
   Put,
   UploadedFile,
   UseInterceptors,
@@ -21,37 +20,13 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import { UsersService } from './users.service';
-import { storage, fileFilter } from './utils';
-import { CreateUserRequest, UpdateUserRequest, UserResponse } from './dto';
+import { fileFilter, storage } from '@/common/utils';
+import { UpdateUserRequest, UserResponse } from './dto';
 
 @ApiTags('Пользователи')
 @Controller({ path: 'users', version: '1' })
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
-  @ApiOperation({
-    description: 'Созднание пользователя.',
-    summary: 'Созднание пользователя.',
-  })
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    type: CreateUserRequest,
-  })
-  @ApiCreatedResponse({ type: UserResponse })
-  @UseInterceptors(
-    FileInterceptor('avatar', {
-      storage: storage(),
-      limits: { fileSize: 1 * 1024 * 1024 },
-      fileFilter,
-    }),
-  )
-  @Post('')
-  create(
-    @Body() dto: Omit<CreateUserRequest, 'avatar'>,
-    @UploadedFile() avatar: Express.Multer.File,
-  ): Promise<UserResponse> {
-    return this.usersService.create(dto, avatar);
-  }
 
   @ApiOperation({
     description: 'Получение профиля пользователя.',
@@ -96,7 +71,7 @@ export class UsersController {
   @ApiCreatedResponse({ type: UserResponse })
   @UseInterceptors(
     FileInterceptor('avatar', {
-      storage: storage(true),
+      storage: storage({ isUpdate: true, path: 'avatars ' }),
       limits: { fileSize: 1 * 1024 * 1024 },
       fileFilter,
     }),
