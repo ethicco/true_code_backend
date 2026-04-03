@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import { UsersRepository } from './users.repository';
-import { CreateUserRequest, UserResponse } from './dto';
+import { ICreateUserRequest, IUpdateUserRequest, UserResponse } from './dto';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
   async create(
-    data: Omit<CreateUserRequest, 'avatar'>,
+    data: Omit<ICreateUserRequest, 'avatar'>,
     avatar: Express.Multer.File,
   ): Promise<UserResponse> {
     const user = await this.usersRepository.create({
@@ -32,12 +32,13 @@ export class UsersService {
     return this.usersRepository.getByEmail(email);
   }
 
-  updateProfile(
-    id: string,
-    data: Omit<CreateUserRequest, 'avatar'>,
-  ): Promise<UserResponse> {
+  updateProfile(id: string, data: IUpdateUserRequest): Promise<UserResponse> {
     return this.usersRepository.update(id, data);
   }
 
-  updataAvatar(id: string, image: Express.Multer.File) {}
+  updataAvatar(id: string, avatar: Express.Multer.File) {
+    const avatarUrl = `avatars/${id}/${avatar.filename}`;
+
+    return this.usersRepository.update(id, { avatar: avatarUrl });
+  }
 }

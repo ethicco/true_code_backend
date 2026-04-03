@@ -6,7 +6,17 @@ import {
   IsString,
 } from 'class-validator';
 
-export class CreateUserRequest {
+export interface ICreateUserRequest {
+  avatar: string;
+  firstName: string;
+  lastName: string;
+  birthday: Date;
+  about: string;
+  email: string;
+  phone: string;
+}
+
+export class CreateUserRequest implements ICreateUserRequest {
   @ApiProperty({
     description: 'Аватар пользователя',
     type: String,
