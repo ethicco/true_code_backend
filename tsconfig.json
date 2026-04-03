@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "resolvePackageJsonExports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2023",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "noFallthroughCasesInSwitch": false,
+    "strictPropertyInitialization": false,
+    "paths": {
+      "@/common": ["common/"],
+      "@/common/*": ["common/*"],
+      "@/db": ["db/"],
+      "@/db/*": ["db/*"]
+    }
+  },
+  "files": ["typings/global.d.ts"],
+  "include": [
+    "apps/**/*",
+    "common/**/*",
+    "db/**/*",
+    "jest.config.ts",
+    "typings/global.d.ts",
+    "ormconfig.migrations.ts"
+  ],
+  "exclude": ["./dist"]
+}
