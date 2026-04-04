@@ -16,7 +16,10 @@ export class PostsRepository {
   }
 
   getById(id: string): Promise<PostEntity> {
-    return this.postsRepository.findOneOrFail({ where: { id } });
+    return this.postsRepository.findOneOrFail({
+      where: { id },
+      relations: { images: true },
+    });
   }
 
   getList(request: IPostListRequest): Promise<[PostEntity[], number]> {
