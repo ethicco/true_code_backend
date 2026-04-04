@@ -1,6 +1,23 @@
 version: '3.9'
 name: 'true_code'
 services:
+  app:
+    build: .
+    environment:
+      - HTTP_API_PORT=${HTTP_API_PORT}
+      - DB_HOST=postgres
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - SALT_CREATE_PASSWORD=${SALT_CREATE_PASSWORD}
+      - JWT_AUTH_SECRET=${JWT_AUTH_SECRET}
+      - JWT_AUTH_EXPIRES_IN=${JWT_AUTH_EXPIRES_IN}
+      - JWT_AUTH_REFRESH_SECRET=${JWT_AUTH_REFRESH_SECRET}
+      - JWT_AUTH_EXPIRES_IN_REFRESH=${JWT_AUTH_EXPIRES_IN_REFRESH}
+    ports:
+      - ${HTTP_API_PORT}:3000
+    depends_on:
+      - postgres
   postgres:
     image: docker.art.ladadigit.io/postgres:16.4-alpine3.20
     container_name: true_code_db
