@@ -29,7 +29,7 @@ export class PostEntity extends BaseEntity {
   })
   cratedAt: Date;
 
-  @OneToMany(() => PostImageEntity, (images) => images.image)
+  @OneToMany(() => PostImageEntity, (images) => images.post)
   images: Array<PostImageEntity>;
 
   @ManyToOne(() => UserEntity, (user) => user.posts, { onDelete: 'CASCADE' })
