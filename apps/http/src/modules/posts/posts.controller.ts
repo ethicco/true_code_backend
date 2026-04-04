@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
+  Query,
   SerializeOptions,
   UploadedFiles,
   UseGuards,
@@ -10,11 +12,17 @@ import {
 import {
   ApiBearerAuth,
   ApiConsumes,
+  ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/common/guards';
-import { CreatePostRequest, PostResponse } from './dto';
+import {
+  CreatePostRequest,
+  PostListRequest,
+  PostListResponse,
+  PostResponse,
+} from './dto';
 import { PostsService } from './posts.service';
 import { User } from '@/common/decorators';
 import { IUser } from '@/common/interfaces';
@@ -56,5 +64,16 @@ export class PostsController {
     @UploadedFiles() { images }: { images: Array<Express.Multer.File> },
   ): Promise<PostResponse> {
     return this.postsService.create(id, dto, images);
+  }
+
+  @ApiOperation({
+    description: 'Получение списка постов.',
+    summary: 'Получение списка постов.',
+  })
+  @ApiOkResponse({ type: PostListResponse })
+  @SerializeOptions({ type: PostListResponse })
+  @Get('')
+  getList(@Query() dto: PostListRequest): Promise<PostListResponse> {
+    return this.postsService.getList(dto);
   }
 }

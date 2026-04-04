@@ -2,7 +2,12 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 import { settings } from '@/common/settings';
-import { CreatePostRequest, PostResponse } from './dto';
+import {
+  CreatePostRequest,
+  PostListRequest,
+  PostListResponse,
+  PostResponse,
+} from './dto';
 import { PostsRepository } from './posts.repository';
 import { PostsImageRepository } from './posts-image.repository';
 import { Injectable } from '@nestjs/common';
@@ -49,7 +54,23 @@ export class PostsService {
       id: res.id,
       text: res.text,
       images: res.images.map((img) => img.image),
-      createdAt: res.cratedAt,
+      createdAt: res.createdAt,
+    };
+  }
+
+  async getList(dto: PostListRequest): Promise<PostListResponse> {
+    const [data, totalCount] = await this.postsRepository.getList(dto);
+
+    return {
+      data: data.map(({ images, ...item }) => ({
+        ...item,
+        images: images.map((img) => img.image),
+      })),
+      meta: {
+        page: dto.page,
+        perPage: dto.perPage,
+        totalCount,
+      },
     };
   }
 }

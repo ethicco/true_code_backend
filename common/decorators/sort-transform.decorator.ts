@@ -55,7 +55,7 @@ const sortTransformer = (
 
 export function SortTransform(
   allowedKeys: string[],
-  isStrings: boolean = true,
+  isStrings: boolean = false,
 ): PropertyDecorator {
   return applyDecorators(
     Transform(sortTransformer(allowedKeys, isStrings), { toClassOnly: true }),

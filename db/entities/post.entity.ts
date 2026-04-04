@@ -27,7 +27,7 @@ export class PostEntity extends BaseEntity {
     type: 'timestamptz',
     nullable: false,
   })
-  cratedAt: Date;
+  createdAt: Date;
 
   @OneToMany(() => PostImageEntity, (images) => images.post)
   images: Array<PostImageEntity>;

@@ -23,9 +23,10 @@ export class PostsRepository {
   }
 
   getList(request: IPostListRequest): Promise<[PostEntity[], number]> {
-    const { perPage, page, sort } = request;
+    const { userId, perPage, page, sort } = request;
 
     return this.postsRepository.findAndCount({
+      where: userId ? { userId } : undefined,
       take: perPage,
       skip: (page - 1) * perPage,
       order: sort,
