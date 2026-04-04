@@ -11,8 +11,8 @@ export class UsersService {
     return this.usersRepository.getById(id);
   }
 
-  updateProfile(id: string, data: IUpdateUserRequest): Promise<UserResponse> {
-    return this.usersRepository.update(id, data);
+  updateProfile(id: string, dto: IUpdateUserRequest): Promise<UserResponse> {
+    return this.usersRepository.update(id, dto);
   }
 
   updataAvatar(id: string, avatar: Express.Multer.File) {

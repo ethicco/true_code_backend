@@ -22,10 +22,10 @@ export class AuthService {
   ) {}
 
   async signUp(
-    request: Omit<ISignUpRequest, 'avatar'>,
+    dto: Omit<ISignUpRequest, 'avatar'>,
     avatar: Express.Multer.File,
   ): Promise<AuthResponse> {
-    const { password, ...params } = request;
+    const { password, ...params } = dto;
 
     const user = await this.userRepository.getByEmail(params.email);
 
@@ -47,7 +47,7 @@ export class AuthService {
     );
 
     const createdUser = await this.authRepository.create({
-      ...request,
+      ...dto,
       passwordHash,
       avatar: '',
     });
