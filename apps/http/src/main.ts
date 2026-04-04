@@ -54,10 +54,10 @@ async function bootstrap(): Promise<void> {
   const swaggerPath = `/swagger-ui`;
   const port = config.get<number>('HTTP_API_PORT') || 3000;
 
+  app.enableCors();
   app.useStaticAssets(path.join(process.cwd(), 'public'), {
     prefix: '/uploads',
   });
-
   app.enableVersioning({
     type: VersioningType.URI,
   });
