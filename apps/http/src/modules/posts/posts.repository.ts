@@ -43,7 +43,10 @@ export class PostsRepository {
   }
 
   async delete(id: string): Promise<PostEntity> {
-    const post = await this.postsRepository.findOneOrFail({ where: { id } });
+    const post = await this.postsRepository.findOneOrFail({
+      where: { id },
+      relations: { images: true },
+    });
 
     return post.remove();
   }

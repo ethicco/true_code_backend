@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export interface ICretePostRequest {
   userId: string;
@@ -17,5 +17,7 @@ export class CreatePostRequest implements Omit<ICretePostRequest, 'userId'> {
     format: 'binary',
     isArray: true,
   })
+  @IsString({ each: true })
+  @IsOptional()
   images: Array<string>;
 }

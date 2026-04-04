@@ -1,8 +1,12 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
+  ParseUUIDPipe,
   Post,
+  Put,
   Query,
   SerializeOptions,
   UploadedFiles,
@@ -22,10 +26,10 @@ import {
   PostListRequest,
   PostListResponse,
   PostResponse,
+  UpdatePostRequest,
 } from './dto';
 import { PostsService } from './posts.service';
 import { User } from '@/common/decorators';
-import { IUser } from '@/common/interfaces';
 import { fileFilter, storage } from '@/common/utils';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
@@ -75,5 +79,62 @@ export class PostsController {
   @Get('')
   getList(@Query() dto: PostListRequest): Promise<PostListResponse> {
     return this.postsService.getList(dto);
+  }
+
+  @ApiOperation({
+    description: 'Получение поста по ID.',
+    summary: 'Получение поста по ID.',
+  })
+  @ApiOkResponse({ type: PostResponse })
+  @SerializeOptions({ type: PostResponse })
+  @Get(':id')
+  getById(@Param('id', ParseUUIDPipe) id: string): Promise<PostResponse> {
+    return this.postsService.getById(id);
+  }
+
+  @ApiOperation({
+    description: 'Обновление поста.',
+    summary: 'Обновление поста.',
+  })
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [
+        {
+          name: 'images',
+          maxCount: 5,
+        },
+      ],
+      {
+        storage: storage({ path: 'posts' }),
+        limits: { fileSize: 1 * 1024 * 1024 },
+        fileFilter,
+      },
+    ),
+  )
+  @ApiOkResponse({ type: PostResponse })
+  @SerializeOptions({ type: PostResponse })
+  @Put(':id')
+  update(
+    @User('id') userId: string,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdatePostRequest,
+    @UploadedFiles() { images }: { images: Array<Express.Multer.File> },
+  ): Promise<PostResponse> {
+    return this.postsService.update(userId, id, dto, images);
+  }
+
+  @ApiOperation({
+    description: 'Удаление поста.',
+    summary: 'Удаление поста.',
+  })
+  @ApiOkResponse({ type: PostResponse })
+  @SerializeOptions({ type: PostResponse })
+  @Delete(':id')
+  delete(
+    @User('id') userId: string,
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<PostResponse> {
+    return this.postsService.delete(userId, id);
   }
 }
