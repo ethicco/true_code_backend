@@ -1,8 +1,9 @@
-import { JestConfigWithTsJest, pathsToModuleNameMapper } from 'ts-jest';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { pathsToModuleNameMapper } = require('ts-jest');
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { compilerOptions } = require('./tsconfig.json');
 
-import { compilerOptions } from './tsconfig.json';
-
-export default {
+module.exports = {
   verbose: true,
   moduleFileExtensions: ['js', 'json', 'ts'],
   setupFilesAfterEnv: ['jest-extended/all'],
@@ -21,11 +22,10 @@ export default {
     ],
   },
   moduleNameMapper: {
-    '^axios$': require.resolve('axios'),
     ...pathsToModuleNameMapper(compilerOptions.paths),
   },
   modulePathIgnorePatterns: ['dist', 'node_modules'],
   coveragePathIgnorePatterns: ['dist', 'node_modules'],
   collectCoverageFrom: ['**/*.(t|j)s'],
   coverageDirectory: '../coverage',
-} satisfies JestConfigWithTsJest;
+};
