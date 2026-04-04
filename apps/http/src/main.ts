@@ -1,4 +1,4 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import {
   INestApplication,
@@ -10,15 +10,33 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
 import * as path from 'node:path';
+import { AppSerializerInterceptor } from '@/common/interceprors';
 
 const initializeSwaggerDocumentation = (
   app: INestApplication,
   swaggerPath: string,
 ): void => {
   const config = new DocumentBuilder()
-    .setTitle(`REST API Документация сервиса Merchant Employee Repo`)
+    .setTitle(`REST API Документация сервиса`)
     .setVersion('1.0')
-    .addBearerAuth()
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        in: 'header',
+      },
+      'access-token',
+    )
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        in: 'header',
+      },
+      'refresh-token',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
@@ -45,6 +63,11 @@ async function bootstrap(): Promise<void> {
   });
   app.setGlobalPrefix(globalPrefix);
   app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
+  app.useGlobalInterceptors(
+    new AppSerializerInterceptor(app.get(Reflector), {
+      strategy: 'excludeAll',
+    }),
+  );
 
   const logger = new Logger('main');
 

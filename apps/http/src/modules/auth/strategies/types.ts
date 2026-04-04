@@ -3,6 +3,7 @@ export type JwtPayload = {
   avatar: string;
   firstName: string;
   lastName: string;
+  birthday: string;
   about: string;
   email: string;
   phone: string;

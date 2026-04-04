@@ -22,6 +22,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
     avatar: string;
     firstName: string;
     lastName: string;
+    birthday: string;
     about: string;
     email: string;
     phone: string;
@@ -33,6 +34,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
       avatar: payload.avatar,
       firstName: payload.firstName,
       lastName: payload.lastName,
+      birthday: payload.birthday,
       about: payload.about,
       email: payload.email,
       phone: payload.phone,

@@ -1,15 +1,16 @@
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { AuthRepository } from './auth.repository';
 import { AuthResponse, ISignUpRequest } from './dto';
 import { settings } from '@/common/settings';
-import { generateHashPassword } from './helpers';
+import { generateHashPassword, verifyPassword } from './helpers';
 import { ConfigService } from '@nestjs/config';
 import { UsersRepository } from '../users/users.repository';
 import { IGetTokensParams } from './interfaces';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
+import { IUser } from '@/common/interfaces';
 
 @Injectable()
 export class AuthService {
@@ -73,9 +74,52 @@ export class AuthService {
       avatar: res.avatar,
       firstName: res.firstName,
       lastName: res.lastName,
+      birthday: res.birthday,
       about: res.about,
       email: res.email,
       phone: res.phone,
+    });
+  }
+
+  async signIn(email: string, password: string): Promise<AuthResponse> {
+    const user = await this.userRepository.getByEmail(email);
+
+    if (!user) {
+      throw new BadRequestException('User is not registered');
+    }
+
+    const isVerifiedPassword = await verifyPassword(
+      password,
+      user.passwordHash,
+      this.configService.get('SALT_CREATE_PASSWORD')!,
+    );
+
+    if (!isVerifiedPassword) {
+      throw new BadRequestException('User password is wrong');
+    }
+
+    return this.updateTokens({
+      userId: user.id,
+      avatar: user.avatar,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      birthday: user.birthday,
+      about: user.about,
+      email: user.email,
+      phone: user.phone,
+    });
+  }
+
+  refreshToken(user: IUser): Promise<AuthResponse> {
+    return this.updateTokens({
+      userId: user.id,
+      avatar: user.avatar,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      birthday: user.birthday as unknown as Date,
+      about: user.about,
+      email: user.email,
+      phone: user.phone,
     });
   }
 

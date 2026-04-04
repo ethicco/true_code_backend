@@ -19,6 +19,7 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
     avatar: string;
     firstName: string;
     lastName: string;
+    birthday: string;
     about: string;
     email: string;
     phone: string;
@@ -30,6 +31,7 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
       avatar: payload.avatar,
       firstName: payload.firstName,
       lastName: payload.lastName,
+      birthday: payload.birthday,
       about: payload.about,
       email: payload.email,
       phone: payload.phone,

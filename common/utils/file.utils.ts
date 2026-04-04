@@ -17,7 +17,7 @@ export const storage = (config: StorageConfig) =>
             process.cwd(),
             settings.UPLOAD_FOLDER,
             config.path || '',
-            req.params.id as string,
+            req.user?.id as string,
           )
         : path.join(process.cwd(), settings.UPLOAD_FOLDER, config.path || '');
 

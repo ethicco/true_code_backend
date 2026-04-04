@@ -2,7 +2,6 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 
 import {
   IsDateString,
-  IsEmail,
   IsOptional,
   IsPhoneNumber,
   IsString,
@@ -45,15 +44,6 @@ export class UpdateUserRequest implements IUpdateUserRequest {
   @IsString()
   @IsOptional()
   about?: string;
-
-  @ApiPropertyOptional({
-    description: 'Email пользователя.',
-    type: String,
-    format: 'email',
-  })
-  @IsEmail()
-  @IsOptional()
-  email?: string;
 
   @ApiPropertyOptional({ description: 'Телефон пользователя.', type: String })
   @IsPhoneNumber('RU')

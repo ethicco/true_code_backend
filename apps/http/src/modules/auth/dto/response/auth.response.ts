@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ExposeApiProperty } from '@/common/decorators';
 
 export interface IAuthResponse {
   accessToken: string;
@@ -6,13 +6,13 @@ export interface IAuthResponse {
 }
 
 export class AuthResponse implements IAuthResponse {
-  @ApiProperty({
+  @ExposeApiProperty({
     description: 'Токен доступа.',
     type: String,
   })
   accessToken: string;
 
-  @ApiProperty({
+  @ExposeApiProperty({
     description: 'Рефреш токен доступа.',
     type: String,
   })

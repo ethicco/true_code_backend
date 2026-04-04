@@ -1,6 +1,6 @@
 import { pbkdf2 } from 'node:crypto';
 
-const PASSWORD_LENGTH = 256;
+const PASSWORD_LENGTH = 128;
 const BYTE_TO_STRING_ENCODING: BufferEncoding = 'hex';
 const ITERATIONS = 10000;
 const DIGEST = 'sha256';

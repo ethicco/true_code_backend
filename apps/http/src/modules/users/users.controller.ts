@@ -2,14 +2,15 @@ import {
   Body,
   Controller,
   Get,
-  Param,
-  ParseUUIDPipe,
   Patch,
   Put,
+  SerializeOptions,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiConsumes,
   ApiCreatedResponse,
@@ -22,8 +23,13 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { UsersService } from './users.service';
 import { fileFilter, storage } from '@/common/utils';
 import { UpdateUserRequest, UserResponse } from './dto';
+import { User } from '@/common/decorators';
+import { IUser } from '@/common/interfaces';
+import { JwtAuthGuard } from '@/common/guards';
 
+@ApiBearerAuth('access-token')
 @ApiTags('Пользователи')
+@UseGuards(JwtAuthGuard)
 @Controller({ path: 'users', version: '1' })
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -33,9 +39,10 @@ export class UsersController {
     summary: 'Получение профиля пользователя.',
   })
   @ApiOkResponse({ type: UserResponse })
-  @Get(':email')
-  getByEmail(@Param('email') email: string): Promise<UserResponse> {
-    return this.usersService.getByEmail(email);
+  @SerializeOptions({ type: UserResponse })
+  @Get('')
+  getById(@User('id') { id }: Pick<IUser, 'id'>): Promise<UserResponse> {
+    return this.usersService.getById(id);
   }
 
   @ApiOperation({
@@ -43,9 +50,10 @@ export class UsersController {
     summary: 'Обновление профиля пользователя.',
   })
   @ApiOkResponse({ type: UserResponse })
-  @Put(':id')
+  @SerializeOptions({ type: UserResponse })
+  @Put()
   update(
-    @Param('id', ParseUUIDPipe) id: string,
+    @User('id') { id }: Pick<IUser, 'id'>,
     @Body() dto: UpdateUserRequest,
   ): Promise<UserResponse> {
     return this.usersService.updateProfile(id, dto);
@@ -71,14 +79,15 @@ export class UsersController {
   @ApiCreatedResponse({ type: UserResponse })
   @UseInterceptors(
     FileInterceptor('avatar', {
-      storage: storage({ isUpdate: true, path: 'avatars ' }),
+      storage: storage({ isUpdate: true, path: 'avatars' }),
       limits: { fileSize: 1 * 1024 * 1024 },
       fileFilter,
     }),
   )
-  @Patch(':id/avatar')
+  @SerializeOptions({ type: UserResponse })
+  @Patch('/avatar')
   updateAvatar(
-    @Param('id', ParseUUIDPipe) id: string,
+    @User('id') { id }: Pick<IUser, 'id'>,
     @UploadedFile() avatar: Express.Multer.File,
   ) {
     return this.usersService.updataAvatar(id, avatar);

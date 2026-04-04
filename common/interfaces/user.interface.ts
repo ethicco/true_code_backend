@@ -1,10 +1,12 @@
-export interface IGetTokensParams {
-  userId: string;
+export interface IUser {
+  id: string;
   avatar: string;
   firstName: string;
   lastName: string;
-  birthday: Date;
+  birthday: string;
   about: string;
   email: string;
   phone: string;
+  iat: number;
+  exp: number;
 }

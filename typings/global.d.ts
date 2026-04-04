@@ -10,6 +10,12 @@ declare global {
     : T;
 
   type SortObject<T = string> = Record<T, 'asc' | 'desc'>;
+
+  namespace Express {
+    interface User {
+      id: string;
+    }
+  }
 }
 
 export {};

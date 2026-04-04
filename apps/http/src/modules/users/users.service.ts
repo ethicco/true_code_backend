@@ -7,8 +7,8 @@ import { IUpdateUserRequest, UserResponse } from './dto';
 export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
-  getByEmail(email: string): Promise<UserResponse> {
-    return this.usersRepository.getByEmail(email);
+  getById(id: string): Promise<UserResponse> {
+    return this.usersRepository.getById(id);
   }
 
   updateProfile(id: string, data: IUpdateUserRequest): Promise<UserResponse> {

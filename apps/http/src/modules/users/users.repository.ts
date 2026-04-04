@@ -11,8 +11,12 @@ export class UsersRepository {
     private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  getByEmail(email: string): Promise<UserEntity> {
-    return this.userRepository.findOneOrFail({ where: { email } });
+  getById(id: string): Promise<UserEntity> {
+    return this.userRepository.findOneOrFail({ where: { id } });
+  }
+
+  getByEmail(email: string): Promise<UserEntity | null> {
+    return this.userRepository.findOne({ where: { email } });
   }
 
   async update(id: string, request: IUpdateUserRequest): Promise<UserEntity> {

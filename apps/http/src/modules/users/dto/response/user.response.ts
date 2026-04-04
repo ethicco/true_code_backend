@@ -1,43 +1,46 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ExposeApiProperty } from '@/common/decorators';
 
 export class UserResponse {
-  @ApiProperty({
+  @ExposeApiProperty({
     description: 'ID пользователя.',
     type: String,
     format: 'uuid',
   })
   id: string;
 
-  @ApiProperty({
+  @ExposeApiProperty({
     description: 'URL адрес аватара.',
     type: String,
     format: 'uri',
   })
   avatar: string;
 
-  @ApiProperty({ description: 'Имя пользователя.', type: String })
+  @ExposeApiProperty({ description: 'Имя пользователя.', type: String })
   firstName: string;
 
-  @ApiProperty({ description: 'Фамилия пользователя.', type: String })
+  @ExposeApiProperty({ description: 'Фамилия пользователя.', type: String })
   lastName: string;
 
-  @ApiProperty({
+  @ExposeApiProperty({
     description: 'Дата рождения пользователя.',
     type: Date,
     format: 'date',
   })
   birthday: Date;
 
-  @ApiProperty({ description: 'Информация о пользователе.', type: String })
+  @ExposeApiProperty({
+    description: 'Информация о пользователе.',
+    type: String,
+  })
   about: string;
 
-  @ApiProperty({
+  @ExposeApiProperty({
     description: 'Email пользователя.',
     type: String,
     format: 'email',
   })
   email: string;
 
-  @ApiProperty({ description: 'Телефон пользователя.', type: String })
+  @ExposeApiProperty({ description: 'Телефон пользователя.', type: String })
   phone: string;
 }
