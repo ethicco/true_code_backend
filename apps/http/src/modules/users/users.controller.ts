@@ -41,7 +41,7 @@ export class UsersController {
   @ApiOkResponse({ type: UserResponse })
   @SerializeOptions({ type: UserResponse })
   @Get('me')
-  getById(@User('id') { id }: Pick<IUser, 'id'>): Promise<UserResponse> {
+  getById(@User('id') id: string): Promise<UserResponse> {
     return this.usersService.getById(id);
   }
 

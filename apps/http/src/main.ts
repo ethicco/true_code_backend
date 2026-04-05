@@ -11,6 +11,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
 import * as path from 'node:path';
 import { AppSerializerInterceptor } from '@/common/interceprors';
+import { settings } from '@/common/settings';
 
 const initializeSwaggerDocumentation = (
   app: INestApplication,
@@ -55,8 +56,8 @@ async function bootstrap(): Promise<void> {
   const port = config.get<number>('HTTP_API_PORT') || 3000;
 
   app.enableCors();
-  app.useStaticAssets(path.join(process.cwd(), 'public'), {
-    prefix: '/uploads',
+  app.useStaticAssets(path.join(process.cwd(), settings.UPLOAD_FOLDER), {
+    prefix: settings.UPLOAD_FOLDER,
   });
   app.enableVersioning({
     type: VersioningType.URI,
