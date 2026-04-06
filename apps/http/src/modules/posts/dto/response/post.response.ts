@@ -20,4 +20,11 @@ export class PostResponse {
     format: 'date-time',
   })
   createdAt: Date;
+
+  @ExposeApiProperty({
+    description: 'ID пользователя.',
+    type: String,
+    format: 'uuid',
+  })
+  userId: string;
 }

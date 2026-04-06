@@ -56,6 +56,7 @@ export class PostsService {
       text: res.text,
       images: res.images.map((img) => img.image),
       createdAt: res.createdAt,
+      userId: res.userId,
     };
   }
 
@@ -145,6 +146,7 @@ export class PostsService {
       text: res.text,
       images: res.images.map((img) => img.image),
       createdAt: res.createdAt,
+      userId: res.userId,
     };
   }
 
