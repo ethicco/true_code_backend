@@ -24,7 +24,6 @@ import { UsersService } from './users.service';
 import { fileFilter, storage } from '@/common/utils';
 import { UpdateUserRequest, UserResponse } from './dto';
 import { User } from '@/common/decorators';
-import { IUser } from '@/common/interfaces';
 import { JwtAuthGuard } from '@/common/guards';
 
 @ApiBearerAuth('access-token')
@@ -53,7 +52,7 @@ export class UsersController {
   @SerializeOptions({ type: UserResponse })
   @Put()
   update(
-    @User('id') { id }: Pick<IUser, 'id'>,
+    @User('id') id: string,
     @Body() dto: UpdateUserRequest,
   ): Promise<UserResponse> {
     return this.usersService.updateProfile(id, dto);
@@ -87,7 +86,7 @@ export class UsersController {
   @SerializeOptions({ type: UserResponse })
   @Patch('/avatar')
   updateAvatar(
-    @User('id') { id }: Pick<IUser, 'id'>,
+    @User('id') id: string,
     @UploadedFile() avatar: Express.Multer.File,
   ) {
     return this.usersService.updataAvatar(id, avatar);
