@@ -27,6 +27,9 @@ class EnvironmentVariables {
 
   @IsString()
   JWT_AUTH_REFRESH_SECRET: string;
+
+  @IsString()
+  CORS_WHITELIST: string;
 }
 
 export function validate(

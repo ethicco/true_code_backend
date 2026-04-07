@@ -49,6 +49,7 @@ async function bootstrap(): Promise<void> {
   const port = config.get<number>('HTTP_API_PORT') || 3000;
 
   app.enableCors({
+    origin: ['*', ...(config.get<string>('CORS_WHITELIST')?.split(',') || [])],
     credentials: true,
     exposedHeaders: ['set-cookie'],
   });
