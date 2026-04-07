@@ -4,6 +4,8 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Req,
+  Res,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -17,10 +19,12 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { AuthResponse, SignInRequest, SignUpRequest } from './dto';
+import type { Response } from 'express';
+
 import { FileInterceptor } from '@nestjs/platform-express';
 import { storage, fileFilter } from '@/common/utils';
 import { AuthService } from './auth.service';
+import { AuthResponse, SignInRequest, SignUpRequest } from './dto';
 import { JwtAuthRefreshTokenGuard } from '@/common/guards';
 import { User } from '@/common/decorators';
 import type { IUser } from '@/common/interfaces';
@@ -52,8 +56,9 @@ export class AuthController {
   signUp(
     @Body() dto: Omit<SignUpRequest, 'avatar'>,
     @UploadedFile() avatar: Express.Multer.File,
-  ): Promise<AuthResponse> {
-    return this.authService.signUp(dto, avatar);
+    @Res() response: Response,
+  ): Promise<ReturnType<Response['send']>> {
+    return this.authService.signUp(dto, avatar, response);
   }
 
   @ApiOperation({
@@ -63,8 +68,11 @@ export class AuthController {
   @ApiOkResponse({ type: AuthResponse })
   @HttpCode(HttpStatus.OK)
   @Post('sign-in')
-  signIn(@Body() dto: SignInRequest): Promise<AuthResponse> {
-    return this.authService.signIn(dto.email, dto.password);
+  signIn(
+    @Body() dto: SignInRequest,
+    @Res() response: Response,
+  ): Promise<ReturnType<Response['send']>> {
+    return this.authService.signIn(dto.email, dto.password, response);
   }
 
   @ApiOperation({
@@ -76,7 +84,24 @@ export class AuthController {
   @UseGuards(JwtAuthRefreshTokenGuard)
   @HttpCode(HttpStatus.OK)
   @Post('refresh-token')
-  refreshToken(@User() user: IUser): Promise<AuthResponse> {
-    return this.authService.refreshToken(user);
+  refreshToken(
+    @User() user: IUser,
+    @Res() response: Response,
+  ): Promise<ReturnType<Response['send']>> {
+    return this.authService.refreshToken(user, response);
+  }
+
+  @ApiOperation({
+    description: 'Разлогирование пользователя.',
+    summary: 'Разлогирование пользователя.',
+  })
+  @Post('sign-out')
+  @ApiOkResponse({ type: AuthResponse, description: 'success' })
+  @HttpCode(HttpStatus.OK)
+  signOut(
+    @Req() req: Request,
+    @Res() res: Response,
+  ): ReturnType<Response['send']> {
+    return this.authService.signOut(req, res);
   }
 }

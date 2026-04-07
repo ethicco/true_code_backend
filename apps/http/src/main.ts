@@ -12,6 +12,7 @@ import { ConfigService } from '@nestjs/config';
 import * as path from 'node:path';
 import { AppSerializerInterceptor } from '@/common/interceprors';
 import { settings } from '@/common/settings';
+import cookieParser from 'cookie-parser';
 
 const initializeSwaggerDocumentation = (
   app: INestApplication,
@@ -20,24 +21,16 @@ const initializeSwaggerDocumentation = (
   const config = new DocumentBuilder()
     .setTitle(`REST API Документация сервиса`)
     .setVersion('1.0')
-    .addBearerAuth(
-      {
-        type: 'http',
-        scheme: 'bearer',
-        bearerFormat: 'JWT',
-        in: 'header',
-      },
-      'access-token',
-    )
-    .addBearerAuth(
-      {
-        type: 'http',
-        scheme: 'bearer',
-        bearerFormat: 'JWT',
-        in: 'header',
-      },
-      'refresh-token',
-    )
+    .addCookieAuth('accessToken', {
+      type: 'http',
+      in: 'cookie',
+      name: 'accessToken',
+    })
+    .addCookieAuth('refreshToken', {
+      type: 'http',
+      in: 'cookie',
+      name: 'refreshToken',
+    })
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
@@ -55,7 +48,11 @@ async function bootstrap(): Promise<void> {
   const swaggerPath = `/swagger-ui`;
   const port = config.get<number>('HTTP_API_PORT') || 3000;
 
-  app.enableCors();
+  app.enableCors({
+    credentials: true,
+    exposedHeaders: ['set-cookie'],
+  });
+  app.use(cookieParser());
   app.useStaticAssets(path.join(process.cwd(), settings.UPLOAD_FOLDER), {
     prefix: settings.UPLOAD_FOLDER,
   });

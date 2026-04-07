@@ -5,16 +5,10 @@ export interface IAuthResponse {
   refreshToken: string;
 }
 
-export class AuthResponse implements IAuthResponse {
+export class AuthResponse {
   @ExposeApiProperty({
-    description: 'Токен доступа.',
+    description: 'Сообщение успешного действия.',
     type: String,
   })
-  accessToken: string;
-
-  @ExposeApiProperty({
-    description: 'Рефреш токен доступа.',
-    type: String,
-  })
-  refreshToken: string;
+  message: string;
 }
