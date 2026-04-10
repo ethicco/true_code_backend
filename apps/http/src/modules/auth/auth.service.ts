@@ -45,6 +45,8 @@ export class AuthService {
         ),
         { force: true },
       );
+
+      throw new BadRequestException('Such user already existed');
     }
 
     const passwordHash = await generateHashPassword(password);
